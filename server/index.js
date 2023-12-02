@@ -8,6 +8,7 @@ const port = 8000;
 const MONGODB_URI = `mongodb+srv://2karinaoist:OistrachK@bether.ledfzng.mongodb.net/?retryWrites=true&w=majority`;
 const connections = {};
 const users = {};
+var numOfClients = 0;
 const client = new MongoClient(MONGODB_URI, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -51,30 +52,6 @@ const server = http.createServer(async (req, res) => {
       console.log("Documents found:", items);
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify(items)); // Send code blocks as a JSON response
-      //client.close();
-
-      //const collection = db.collection("CodeBlocks"); // Replace with your collection name
-
-      //const collection = client.db.collection("CodeBlocks");
-
-      //   collection.find({}).toArray((error, documents) => {
-      //     if (error) {
-      //       console.error("Error finding documents:", error);
-      //       return;
-      //     }
-      //     console.log("Documents found:", documents);
-      //     res.writeHead(200, { "Content-Type": "application/json" });
-      //     res.end(JSON.stringify(documents)); // Send code blocks as a JSON response
-      //     //client.close(); // Close the connection when done
-      //   });
-
-      // Assuming 'codeblocks' is your collection name
-      //   const codeBlocks = await db.collection("CodeBlocks").find({}).toArray();
-
-      //   client.close();
-
-      //   res.writeHead(200, { "Content-Type": "application/json" });
-      //   res.end(JSON.stringify(codeBlocks)); // Send code blocks as a JSON response
     } catch (error) {
       res.writeHead(500, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: error.message }));
@@ -82,6 +59,9 @@ const server = http.createServer(async (req, res) => {
       // Ensures that the client will close when you finish/error
       await client.close();
     }
+  } else if (pathname === "/numOfClients") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(JSON.stringify(numOfClients)); // Send code blocks as a JSON response
   } else {
     res.writeHead(404, { "Content-Type": "text/plain" });
     res.end("Not Found");
@@ -123,10 +103,12 @@ wsServer.on("connection", (connection, request) => {
   console.log(`${username} connected`);
   const uuid = uuidv4();
   connections[uuid] = connection;
+  numOfClients = numOfClients + 1;
   users[uuid] = {
     username,
     state: {},
   };
+
   connection.on("message", (message) => handleMessage(message, uuid));
   connection.on("close", () => handleClose(uuid));
 });

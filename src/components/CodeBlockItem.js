@@ -2,7 +2,7 @@ import "../index.css";
 
 export default function CodeBlockItem(props) {
   return (
-    <li className="pizza" onClick={props.onClick}>
+    <li className="block" onClick={props.onClick}>
       <img src={props.item.photoName} alt={props.item.title}></img>
       <div>
         <h3>{props.item.title}</h3>
@@ -11,4 +11,3 @@ export default function CodeBlockItem(props) {
     </li>
   );
 }
-//<p>{props.item.code}</p>

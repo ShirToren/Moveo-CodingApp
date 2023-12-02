@@ -32,7 +32,7 @@ function Menu(props) {
   return (
     <main className="menu">
       {numOfCodeBlocks > 0 ? (
-        <ul className="pizzas">
+        <ul className="blocks">
           {props.codeBlocksData.map((block) => (
             <CodeBlockItem
               item={block}
@@ -42,7 +42,7 @@ function Menu(props) {
           ))}
         </ul>
       ) : (
-        <p>No code blocks found yet. Working on it :)</p>
+        <p>Loading :)</p>
       )}
     </main>
   );
