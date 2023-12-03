@@ -21,7 +21,7 @@ const server = http.createServer(async (req, res) => {
   const { pathname } = url.parse(req.url);
 
   // Set CORS headers
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000"); // Replace with your React app's URL
+  res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your React app's URL
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, OPTIONS"
@@ -37,10 +37,6 @@ const server = http.createServer(async (req, res) => {
   //endpoints
   if (pathname === "/codeblocks") {
     try {
-      //   const client = await MongoClient.connect(MONGODB_URI, {
-      //     useNewUrlParser: true,
-      //     useUnifiedTopology: true,
-      //   });
       await client.connect();
       await client.db("admin").command({ ping: 1 });
       console.log(

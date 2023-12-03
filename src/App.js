@@ -9,6 +9,7 @@ function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [codeBlocks, setCodeBlocks] = useState([]);
   const [isFirstClient, setFirstClient] = useState(true);
+  const URL = "http://localhost:8000";
 
   const WS_URL = "ws://localhost:8000";
   const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
@@ -18,7 +19,7 @@ function App() {
   useEffect(() => {
     const fetchCodeBlocks = async () => {
       try {
-        const response = await fetch("http://localhost:8000/codeblocks");
+        const response = await fetch(`${URL}/codeblocks`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
@@ -36,7 +37,7 @@ function App() {
   useEffect(() => {
     const fetchNumOfClients = async () => {
       try {
-        const response = await fetch("http://localhost:8000/numOfClients");
+        const response = await fetch(`${URL}/numOfClients`);
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }

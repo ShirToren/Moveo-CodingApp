@@ -9,11 +9,6 @@ import "highlight.js/styles/default.css";
 export default function CodeBlockPage(props) {
   const [textValue, setTextValue] = useState(props.item.code);
 
-  // const WS_URL = "ws://localhost:8000";
-  // const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
-  //   queryParams: "shir",
-  // });
-
   useEffect(() => {
     if (props.lastJsonMessage) {
       Object.keys(props.lastJsonMessage).map((uuid) => {
@@ -21,28 +16,9 @@ export default function CodeBlockPage(props) {
         if (props.item.title === user.state.title) {
           setTextValue(user.state.code);
         }
-        // const codeBlocks = props.codeBlocksData;
-        // console.log(codeBlocks);
-        // console.log(user.state.title);
-        // const blockToUpdate = codeBlocks.find(
-        //   (block) => block.title === user.state.title
-        // );
-        // blockToUpdate.code = user.state.code;
-
-        // const blockToUpdate = props.codeBlocksData.find(
-        //   (block) => block.title === props.item.title
-        // );
-        // blockToUpdate.code = user.state.code;
       });
     }
   }, [props.lastJsonMessage]);
-
-  // useEffect(() => {
-  //   const currentBlock = props.codeBlocksData.find(
-  //     (block) => block.title === props.item.title
-  //   );
-  //   setTextValue(currentBlock.code);
-  // }, []);
 
   const handleChange = (value, event) => {
     setTextValue(value);
