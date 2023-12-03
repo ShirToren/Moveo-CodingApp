@@ -3,18 +3,12 @@ import LobbyPage from "./components/LobbyPage";
 import CodeBlockPage from "./components/CodeBlockPage";
 import { useState } from "react";
 import { useEffect } from "react";
-import useWebSocket from "react-use-websocket";
 
 function App() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [codeBlocks, setCodeBlocks] = useState([]);
   const [isFirstClient, setFirstClient] = useState(true);
   const URL = "http://localhost:8000";
-
-  const WS_URL = "ws://localhost:8000";
-  const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
-    queryParams: "shir",
-  });
 
   useEffect(() => {
     const fetchCodeBlocks = async () => {
@@ -34,23 +28,19 @@ function App() {
     fetchCodeBlocks();
   }, []);
 
-  useEffect(() => {
-    const fetchNumOfClients = async () => {
-      try {
-        const response = await fetch(`${URL}/numOfClients`);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        const data = await response.json();
-        console.log(data);
-        setFirstClient(data === 1 ? true : false);
-      } catch (error) {
-        console.error("Error fetching code blocks:", error);
+  const fetchNumOfClients = async () => {
+    try {
+      const response = await fetch(`${URL}/numOfClients`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
-    };
-
-    fetchNumOfClients();
-  }, []);
+      const data = await response.json();
+      console.log(data);
+      setFirstClient(data === 1 ? true : false);
+    } catch (error) {
+      console.error("Error fetching code blocks:", error);
+    }
+  };
 
   return selectedItem ? (
     <div className="container">
@@ -58,8 +48,7 @@ function App() {
         item={selectedItem}
         codeBlocksData={codeBlocks}
         isFirstClient={isFirstClient}
-        sendJsonMessage={sendJsonMessage}
-        lastJsonMessage={lastJsonMessage}
+        fetchNumOfClients={fetchNumOfClients}
       />
     </div>
   ) : (

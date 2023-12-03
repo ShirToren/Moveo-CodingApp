@@ -3,22 +3,32 @@ import { useEffect, useState } from "react";
 import throttle from "lodash.throttle";
 import { useRef } from "react";
 import { Editor } from "@monaco-editor/react";
+import useWebSocket from "react-use-websocket";
 
 import "highlight.js/styles/default.css";
 
 export default function CodeBlockPage(props) {
   const [textValue, setTextValue] = useState(props.item.code);
 
+  const WS_URL = "ws://localhost:8000";
+  const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+    queryParams: "shir",
+  });
+
   useEffect(() => {
-    if (props.lastJsonMessage) {
-      Object.keys(props.lastJsonMessage).map((uuid) => {
-        const user = props.lastJsonMessage[uuid];
+    props.fetchNumOfClients();
+  }, []);
+
+  useEffect(() => {
+    if (lastJsonMessage) {
+      Object.keys(lastJsonMessage).map((uuid) => {
+        const user = lastJsonMessage[uuid];
         if (props.item.title === user.state.title) {
           setTextValue(user.state.code);
         }
       });
     }
-  }, [props.lastJsonMessage]);
+  }, [lastJsonMessage]);
 
   const handleChange = (value, event) => {
     setTextValue(value);
@@ -29,9 +39,7 @@ export default function CodeBlockPage(props) {
   };
 
   const THROTTLE = 50;
-  const sendJsonMessageThrottle = useRef(
-    throttle(props.sendJsonMessage, THROTTLE)
-  );
+  const sendJsonMessageThrottle = useRef(throttle(sendJsonMessage, THROTTLE));
 
   return (
     <div className="container">
